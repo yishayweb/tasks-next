@@ -2,14 +2,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import TasksList from "../TasksList";
 
-export default function RecentTasks() {
+export default async function RecentTasks() {
   return (
-    <Card className="w-full">
+    <Card className="w-2/3 min-w-[768px] max-w-[960px] mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl font-bold">Recent Tasks</CardTitle>
       </CardHeader>
       <CardContent>
-        <TasksList />
+        <TasksList limit={5} />
         <div className="mt-4 text-right">
           <Link
             href="/tasks"

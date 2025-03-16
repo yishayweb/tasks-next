@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useActionState, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,6 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { upsertTicket } from "@/features/tasks/actions/upsert-ticket";
+import { EMPTY_ACTION_STATE } from "@/utils/to-action-state";
 
 const customTasks = [
   "Groceries shopping",
@@ -22,23 +23,13 @@ const customTasks = [
 ];
 
 export default function CreateTask() {
-  const router = useRouter();
   const [taskType, setTaskType] = useState("");
   const [newTaskType, setNewTaskType] = useState("");
-  const [taskName, setTaskName] = useState("");
-  const [taskDescription, setTaskDescription] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Here you would typically send the data to your backend
-    console.log({
-      type: taskType === "new" ? newTaskType : taskType,
-      name: taskName,
-      description: taskDescription,
-    });
-    // Redirect to the tasks list page (you'll need to create this page)
-    router.push("/tasks");
-  };
+  const [actionState, action] = useActionState(
+    upsertTicket.bind(null, undefined),
+    EMPTY_ACTION_STATE
+  );
+  console.log(actionState);
 
   return (
     <div className="bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -49,7 +40,7 @@ export default function CreateTask() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form action={action} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="taskType">Task Type</Label>
               <Select value={taskType} onValueChange={setTaskType}>
@@ -81,22 +72,20 @@ export default function CreateTask() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="taskName">Task Name</Label>
+              <Label htmlFor="title">Task Name</Label>
               <Input
-                id="taskName"
-                value={taskName}
-                onChange={(e) => setTaskName(e.target.value)}
+                id="title"
+                name="title"
                 placeholder="Enter task name"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="taskDescription">Task Description</Label>
+              <Label htmlFor="description">Task Description</Label>
               <Textarea
-                id="taskDescription"
-                value={taskDescription}
-                onChange={(e) => setTaskDescription(e.target.value)}
+                id="description"
+                name="description"
                 placeholder="Enter task description"
                 rows={4}
               />
