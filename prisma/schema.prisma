@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Task {
+  id            String        @id @default(cuid())
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  title         String        @db.VarChar(128)
+  description   String        @db.VarChar(1024)
+  dueDate       DateTime
+  type          TaskType      @default(REGULAR)
+  completed     Boolean       @default(false)
+  priority      TaskPriority  @default(MEDIUM)
+  shoppingList  ShoppingList?
+}
+
+model ShoppingList {
+  id            String          @id @default(cuid())
+  taskId        String          @unique
+  task          Task            @relation(references: [id], fields: [taskId], onDelete: Cascade)
+  items         ShoppingItem[]
+}
+
+model ShoppingItem {
+  id              String        @id @default(cuid())
+  name            String        @db.VarChar(128)
+  quantity        Int
+  shoppingListId  String
+  shoppingList    ShoppingList  @relation(references: [id], fields: [shoppingListId], onDelete: Cascade)
+}
+
+enum TaskType {
+  REGULAR
+  SHOPPING
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
