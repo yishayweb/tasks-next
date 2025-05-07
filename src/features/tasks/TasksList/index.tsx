@@ -11,7 +11,9 @@ export default async function TasksList({ limit }: TasksListProps) {
   return (
     <ul className="space-y-4">
       {tasksList.map((task) => (
-        <TaskRow key={task.id} task={task} />
+        <>
+          <TaskRow key={task.id} task={task} />
+        </>
       ))}
     </ul>
   );
