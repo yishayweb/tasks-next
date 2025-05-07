@@ -2,6 +2,8 @@ import { Bell, Search, Settings, User, PlusCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { signOut } from "@/features/auth/actions";
+import AuthShow from "../AuthShow";
 
 export default function TopBar() {
   return (
@@ -35,6 +37,10 @@ export default function TopBar() {
         <Button variant="ghost" size="icon">
           <User className="h-5 w-5" />
         </Button>
+        <form action={signOut}>
+          <button type="submit">Sign out</button>
+        </form>
+        <AuthShow />
       </div>
     </div>
   );

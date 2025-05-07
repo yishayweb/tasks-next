@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import TopBar from "./localComponents/TopBar";
+import TopBar from "../localComponents/TopBar";
+import { SessionProvider } from "next-auth/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,8 +30,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="flex flex-col h-screen bg-gray-100">
-          <TopBar />
-          {children}
+          <SessionProvider>
+            <TopBar />
+            {children}
+          </SessionProvider>
         </div>
       </body>
     </html>
